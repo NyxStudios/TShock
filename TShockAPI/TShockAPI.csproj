@@ -101,7 +101,6 @@
     <Compile Include="SqlLog.cs" />
     <Compile Include="TextLog.cs" />
     <Compile Include="PaginationTools.cs" />
-    <Compile Include="Rest\RestPermissions.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="DB\BanManager.cs" />
     <Compile Include="DB\CharacterManager.cs" />
@@ -138,12 +137,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rest\Rest.cs" />
-    <Compile Include="Rest\RestCommand.cs" />
-    <Compile Include="Rest\RestManager.cs" />
-    <Compile Include="Rest\RestObject.cs" />
-    <Compile Include="Rest\RestVerbs.cs" />
-    <Compile Include="Rest\SecureRest.cs" />
     <Compile Include="ServerSideCharacters\ServerSideConfig.cs" />
     <Compile Include="TSServerPlayer.cs" />
     <Compile Include="Utils.cs" />

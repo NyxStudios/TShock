@@ -31,7 +31,6 @@ using MaxMind;
 using Mono.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
-using Rests;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -110,10 +109,6 @@ namespace TShockAPI
 		public static bool OverridePort;
 		/// <summary>Geo - Static reference to the GeoIP system which determines the location of an IP address.</summary>
 		public static GeoIPCountry Geo;
-		/// <summary>RestApi - Static reference to the Rest API authentication manager.</summary>
-		public static SecureRest RestApi;
-		/// <summary>RestManager - Static reference to the Rest API manager.</summary>
-		public static RestManager RestManager;
 		/// <summary>Utils - Static reference to the utilities class, which contains a variety of utility functions.</summary>
 		public static Utils Utils = Utils.Instance;
 		/// <summary>UpdateManager - Static reference to the update checker, which checks for updates and notifies server admins of updates.</summary>
@@ -126,10 +121,6 @@ namespace TShockAPI
 		/// Static reference to a <see cref="CommandLineParser"/> used for simple command-line parsing
 		/// </summary>
 		public static CommandLineParser CliParser { get; } = new CommandLineParser();
-		/// <summary>
-		/// Used for implementing REST Tokens prior to the REST system starting up.
-		/// </summary>
-		public static Dictionary<string, SecureRest.TokenData> RESTStartupTokens = new Dictionary<string, SecureRest.TokenData>();
 
 		/// <summary>The TShock anti-cheat/anti-exploit system.</summary>
 		internal Bouncer Bouncer;
@@ -320,9 +311,6 @@ namespace TShockAPI
 				TileBans = new TileManager(DB);
 				RememberedPos = new RememberedPosManager(DB);
 				CharacterDB = new CharacterManager(DB);
-				RestApi = new SecureRest(Netplay.ServerIP, Config.RestApiPort);
-				RestManager = new RestManager(RestApi);
-				RestManager.RegisterRestfulCommands();
 				Bouncer = new Bouncer();
 				RegionSystem = new RegionHandler(Regions);
 
@@ -362,9 +350,6 @@ namespace TShockAPI
 				Commands.InitCommands();
 
 				EnglishLanguage.Initialize();
-
-				if (Config.RestApiEnabled)
-					RestApi.Start();
 
 				Log.ConsoleInfo("AutoSave " + (Config.AutoSave ? "Enabled" : "Disabled"));
 				Log.ConsoleInfo("Backups " + (Backups.Interval > 0 ? "Enabled" : "Disabled"));
@@ -434,7 +419,6 @@ namespace TShockAPI
 					File.Delete(Path.Combine(SavePath, "tshock.pid"));
 				}
 
-				RestApi.Dispose();
 				Log.Dispose();
 
 				RegionSystem.Dispose();
@@ -772,9 +756,6 @@ namespace TShockAPI
 		{
 			FlagSet portSet = new FlagSet("-port");
 			FlagSet playerSet = new FlagSet("-maxplayers", "-players");
-			FlagSet restTokenSet = new FlagSet("--rest-token", "-rest-token");
-			FlagSet restEnableSet = new FlagSet("--rest-enabled", "-rest-enabled");
-			FlagSet restPortSet = new FlagSet("--rest-port", "-rest-port");
 
 			CliParser
 				.AddFlags(portSet, (p) =>
@@ -788,29 +769,6 @@ namespace TShockAPI
 							Log.ConsoleInfo("Port overridden by startup argument. Set to " + port);
 						}
 					})
-				.AddFlags(restTokenSet, (token) =>
-					{
-						RESTStartupTokens.Add(token, new SecureRest.TokenData { Username = "null", UserGroupName = "superadmin" });
-						Console.WriteLine("Startup parameter overrode REST token.");
-					})
-				.AddFlags(restEnableSet, (e) =>
-					{
-						bool enabled;
-						if (bool.TryParse(e, out enabled))
-						{
-							Config.RestApiEnabled = enabled;
-							Console.WriteLine("Startup parameter overrode REST enable.");
-						}
-					})
-				.AddFlags(restPortSet, (p) =>
-				{
-					int restPort;
-					if (int.TryParse(p, out restPort))
-					{
-						Config.RestApiPort = restPort;
-						Console.WriteLine("Startup parameter overrode REST port.");
-					}
-				})
 				.AddFlags(playerSet, (p)=>
 					{
 						int slots;

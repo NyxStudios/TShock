@@ -832,7 +832,6 @@ namespace TShockAPI
 			ConfigFile.DumpDescriptions();
 			Permissions.DumpDescriptions();
 			ServerSideCharacters.ServerSideConfig.DumpDescriptions();
-			RestManager.DumpDescriptions();
 			DumpBuffs("BuffList.txt");
 			DumpItems("Items-1_0.txt", 1, 235);
 			DumpItems("Items-1_1.txt", 235, 604);

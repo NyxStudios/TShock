@@ -65,13 +65,6 @@ namespace TShockAPI
 		public string Suffix { get; set; }
 
 		/// <summary>
-		/// The name of the parent, not particularly sure why this is here.
-		/// We can use group.Parent.Name and not have this second reference. 
-		/// This was added for rest, so a discussion with Shank is necessary.
-		/// </summary>
-		public string ParentName { get { return (null == Parent) ? "" : Parent.Name; } }
-
-		/// <summary>
 		/// The chat color of the group.
 		/// Returns "255,255,255", sets "255,255,255"
 		/// </summary>
