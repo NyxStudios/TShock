@@ -20,6 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using NLog;
 using TerrariaApi.Server;
 
 namespace TShockAPI
@@ -30,6 +31,8 @@ namespace TShockAPI
 	public class TextLog : ILog, IDisposable
 	{
 		private readonly StreamWriter _logWriter;
+
+		private Logger Log = LogManager.GetLogger("TShock");
 
 		/// <summary>
 		/// File name of the Text log
@@ -225,7 +228,7 @@ namespace TShockAPI
 			}
 			catch (ObjectDisposedException)
 			{
-				ServerApi.LogWriter.PluginWriteLine(TShock.instance, logEntry, TraceLevel.Error);
+				Log.Error(logEntry);
 				Console.WriteLine("Unable to write to log as log has been disposed.");
 				Console.WriteLine("{0} - {1}: {2}: {3}",
 					DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),

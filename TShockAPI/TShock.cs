@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -28,7 +29,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using MaxMind;
-using Mono.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Rests;
@@ -41,9 +41,11 @@ using TShockAPI.Hooks;
 using TShockAPI.ServerSideCharacters;
 using Terraria.Utilities;
 using Microsoft.Xna.Framework;
+using NLog;
 using TShockAPI.Sockets;
 using TShockAPI.CLI;
 using TShockAPI.Localization;
+using TraceLevel = System.Diagnostics.TraceLevel;
 
 namespace TShockAPI
 {
@@ -72,6 +74,8 @@ namespace TShockAPI
 		private static string LogPath = LogPathDefault;
 		/// <summary>LogClear - Determines whether or not the log file should be cleared on initialization.</summary>
 		private static bool LogClear;
+
+		private Logger Logger = LogManager.GetLogger("TShock");
 
 		/// <summary>Will be set to true once Utils.StopServer() is called.</summary>
 		public static bool ShuttingDown;
@@ -119,7 +123,7 @@ namespace TShockAPI
 		/// <summary>UpdateManager - Static reference to the update checker, which checks for updates and notifies server admins of updates.</summary>
 		public static UpdateManager UpdateManager;
 		/// <summary>Log - Static reference to the log system, which outputs to either SQL or a text file, depending on user config.</summary>
-		public static ILog Log;
+		public new static ILog Log;
 		/// <summary>instance - Static reference to the TerrariaPlugin instance.</summary>
 		public static TerrariaPlugin instance;
 		/// <summary>
@@ -145,7 +149,7 @@ namespace TShockAPI
 		/// <summary>
 		/// Called after TShock is initialized. Useful for plugins that needs hooks before tshock but also depend on tshock being loaded.
 		/// </summary>
-		public static event Action Initialized;
+		public static event Action AfterInitializedCallback;
 
 		/// <summary>Version - The version required by the TerrariaAPI to be passed back for checking & loading the plugin.</summary>
 		/// <value>value - The version number specified in the Assembly, based on the VersionNum variable set in this class.</value>
@@ -245,7 +249,7 @@ namespace TShockAPI
 					logPathSetupWarning =
 						"Could not apply the given log path / log format, defaults will be used. Exception details:\n" + ex;
 
-					ServerApi.LogWriter.PluginWriteLine(this, logPathSetupWarning, TraceLevel.Error);
+					Logger.Error(logPathSetupWarning);
 
 					// Problem with the log path or format use the default
 					logFilename = Path.Combine(LogPathDefault, now.ToString(LogFormatDefault) + ".log");
@@ -265,7 +269,7 @@ namespace TShockAPI
 				if (Config.StorageType.ToLower() == "sqlite")
 				{
 					string sql = Path.Combine(SavePath, "tshock.sqlite");
-					DB = new SqliteConnection(string.Format("uri=file://{0},Version=3", sql));
+					DB = new SQLiteConnection(string.Format("uri=file://{0}", sql));
 				}
 				else if (Config.StorageType.ToLower() == "mysql")
 				{
@@ -280,11 +284,11 @@ namespace TShockAPI
 								Config.MySqlDbName,
 								Config.MySqlUsername,
 								Config.MySqlPassword
-								);
+							);
 					}
 					catch (MySqlException ex)
 					{
-						ServerApi.LogWriter.PluginWriteLine(this, ex.ToString(), TraceLevel.Error);
+						Logger.Error(ex.ToString());
 						throw new Exception("MySql not setup correctly");
 					}
 				}
@@ -304,6 +308,7 @@ namespace TShockAPI
 						"TShock was improperly shut down. Please use the exit command in the future to prevent this.");
 					File.Delete(Path.Combine(SavePath, "tshock.pid"));
 				}
+
 				File.WriteAllText(Path.Combine(SavePath, "tshock.pid"),
 					Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture));
 
@@ -373,8 +378,8 @@ namespace TShockAPI
 				Log.ConsoleInfo("AutoSave " + (Config.AutoSave ? "Enabled" : "Disabled"));
 				Log.ConsoleInfo("Backups " + (Backups.Interval > 0 ? "Enabled" : "Disabled"));
 
-				if (Initialized != null)
-					Initialized();
+				if (AfterInitializedCallback != null)
+					AfterInitializedCallback();
 
 				Log.ConsoleInfo("Welcome to TShock for Terraria!");
 				Log.ConsoleInfo("TShock comes with no warranty & is free software.");
@@ -681,7 +686,7 @@ namespace TShockAPI
 						SavePath = path ?? "tshock";
 						if (path != null)
 						{
-							ServerApi.LogWriter.PluginWriteLine(this, "Config path has been set to " + path, TraceLevel.Info);
+							Logger.Info($"Config path has been set to {path}");
 						}
 					})
 
@@ -691,7 +696,7 @@ namespace TShockAPI
 						if (path != null)
 						{
 							Main.WorldPath = path;
-							ServerApi.LogWriter.PluginWriteLine(this, "World path has been set to " + path, TraceLevel.Info);
+							Logger.Info($"World path has been set to {path}");
 						}
 					})
 
@@ -701,7 +706,7 @@ namespace TShockAPI
 						if (path != null)
 						{
 							LogPath = path;
-							ServerApi.LogWriter.PluginWriteLine(this, "Log path has been set to " + path, TraceLevel.Info);
+							Logger.Info($"Log path has been set to {path}");
 						}
 					})
 
@@ -714,7 +719,7 @@ namespace TShockAPI
 					{
 						if (!string.IsNullOrWhiteSpace(cfg))
 						{
-							ServerApi.LogWriter.PluginWriteLine(this, string.Format("Loading dedicated config file: {0}", cfg), TraceLevel.Verbose);
+							Logger.Debug($"Loading dedicated config file: {cfg}");
 							Main.instance.LoadDedConfig(cfg);
 						}
 					})
@@ -725,7 +730,7 @@ namespace TShockAPI
 						if (int.TryParse(p, out port))
 						{
 							Netplay.ListenPort = port;
-							ServerApi.LogWriter.PluginWriteLine(this, string.Format("Listening on port {0}.", port), TraceLevel.Verbose);
+							Logger.Debug($"Listening on port {port}.");
 						}
 					})
 
@@ -734,7 +739,7 @@ namespace TShockAPI
 						if (!string.IsNullOrWhiteSpace(world))
 						{
 							Main.instance.SetWorldName(world);
-							ServerApi.LogWriter.PluginWriteLine(this, string.Format("World name will be overridden by: {0}", world), TraceLevel.Verbose);
+							Logger.Debug($"World name will be overridden by: {world}");
 						}
 					})
 
@@ -744,7 +749,7 @@ namespace TShockAPI
 						if (IPAddress.TryParse(ip, out addr))
 						{
 							Netplay.ServerIP = addr;
-							ServerApi.LogWriter.PluginWriteLine(this, string.Format("Listening on IP {0}.", addr), TraceLevel.Verbose);
+							Logger.Debug($"Listening on IP {addr}.");
 						}
 						else
 						{

@@ -1,223 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{49606449-072B-4CF5-8088-AA49DA586694}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TShockAPI</RootNamespace>
-    <AssemblyName>TShockAPI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\TShockAPI.XML</DocumentationFile>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Company>Pryaxis &amp; TShock Contributors</Company>
+    <Copyright>Copyright © Pryaxis &amp; TShock Contributors 2011-2019</Copyright>
+    <AssemblyVersion>4.3.26</AssemblyVersion>
+    <FileVersion>4.3.26</FileVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;COMPAT_SIGS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\TShockAPI.XML</DocumentationFile>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="BCrypt.Net, Version=0.1.4141.31969, Culture=neutral, PublicKeyToken=f3bc8f8c31beeb49, processorArchitecture=MSIL">
-      <HintPath>..\packages\BCrypt.Net.0.1.0\lib\net35\BCrypt.Net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="HttpServer">
+    <ProjectReference Include="..\TerrariaServerAPI\TerrariaServerAPI\TerrariaServerAPI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="HttpServer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5684c2c737cd4271">
       <HintPath>..\prebuilts\HttpServer.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\prebuilts\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="OTAPI=">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath Condition="Exists('..\TerrariaServerAPI\TerrariaServerAPI\bin\$(ConfigurationName)\OTAPI.dll')">..\TerrariaServerAPI\TerrariaServerAPI\bin\$(ConfigurationName)\OTAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackupManager.cs" />
-    <Compile Include="CLI\CommandLineParser.cs" />
-    <Compile Include="CLI\FlagSet.cs" />
-    <Compile Include="DB\ProjectileManager.cs" />
-    <Compile Include="DB\RegionManager.cs" />
-    <Compile Include="DB\TileManager.cs" />
-    <Compile Include="Extensions\ExceptionExt.cs" />
-    <Compile Include="Hooks\AccountHooks.cs" />
-    <Compile Include="Hooks\GeneralHooks.cs" />
-    <Compile Include="Hooks\PlayerHooks.cs" />
-    <Compile Include="Hooks\RegionHooks.cs" />
-    <Compile Include="ILog.cs" />
-    <Compile Include="Localization\EnglishLanguage.cs" />
-    <Compile Include="Models\PlayerUpdate\ControlSet.cs" />
-    <Compile Include="Models\PlayerUpdate\MiscDataSet1.cs" />
-    <Compile Include="Models\PlayerUpdate\MiscDataSet2.cs" />
-    <Compile Include="Models\PlayerUpdate\MiscDataSet3.cs" />
-    <Compile Include="Models\Projectiles\NewProjectileData.cs" />
-    <Compile Include="NetItem.cs" />
-    <Compile Include="PlayerData.cs" />
-    <Compile Include="RegionHandler.cs" />
-    <Compile Include="Sockets\LinuxTcpSocket.cs" />
-    <Compile Include="SqlLog.cs" />
-    <Compile Include="TextLog.cs" />
-    <Compile Include="PaginationTools.cs" />
-    <Compile Include="Rest\RestPermissions.cs" />
-    <Compile Include="SaveManager.cs" />
-    <Compile Include="DB\BanManager.cs" />
-    <Compile Include="DB\CharacterManager.cs" />
-    <Compile Include="DB\IQueryBuilder.cs" />
-    <Compile Include="DB\ItemManager.cs" />
-    <Compile Include="DB\SqlColumn.cs" />
-    <Compile Include="DB\SqlTable.cs" />
-    <Compile Include="DB\SqlValue.cs" />
-    <Compile Include="Extensions\DbExt.cs" />
-    <Compile Include="DB\GroupManager.cs" />
-    <Compile Include="DB\UserManager.cs" />
-    <Compile Include="Extensions\RandomExt.cs" />
-    <Compile Include="Extensions\StringExt.cs" />
-    <Compile Include="GeoIPCountry.cs" />
-    <Compile Include="HandlerList.cs" />
-    <Compile Include="IPackable.cs" />
-    <Compile Include="Commands.cs" />
-    <Compile Include="ConfigFile.cs" />
-    <Compile Include="FileTools.cs" />
-    <Compile Include="GetDataHandlers.cs" />
-    <Compile Include="Group.cs" />
-    <Compile Include="Extensions\LinqExt.cs" />
-    <Compile Include="Net\BaseMsg.cs" />
-    <Compile Include="Net\DisconnectMsg.cs" />
-    <Compile Include="Net\NetTile.cs" />
-    <Compile Include="Net\ProjectileRemoveMsg.cs" />
-    <Compile Include="Net\SpawnMsg.cs" />
-    <Compile Include="Net\WorldInfoMsg.cs" />
-    <Compile Include="Permissions.cs" />
-    <Compile Include="DB\RememberedPosManager.cs" />
-    <Compile Include="Bouncer.cs" />
-    <Compile Include="ItemBans.cs" />
-    <Compile Include="Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Rest\Rest.cs" />
-    <Compile Include="Rest\RestCommand.cs" />
-    <Compile Include="Rest\RestManager.cs" />
-    <Compile Include="Rest\RestObject.cs" />
-    <Compile Include="Rest\RestVerbs.cs" />
-    <Compile Include="Rest\SecureRest.cs" />
-    <Compile Include="ServerSideCharacters\ServerSideConfig.cs" />
-    <Compile Include="TSServerPlayer.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="TShock.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TSPlayer.cs" />
-    <Compile Include="UpdateManager.cs" />
-    <Compile Include="DB\WarpsManager.cs" />
+    <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.20" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
+    <PackageReference Include="NLog" Version="4.7.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+    <PackageReference Include="SQLite" Version="3.13.0" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="TShockAPI.licenseheader" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TerrariaServerAPI\TerrariaServerAPI\TerrariaServerAPI.csproj">
-      <Project>{6877506e-adc6-4142-98a6-79e4fa02855a}</Project>
-      <Name>TerrariaServerAPI</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_BuildVersioningStyle="None.None.None.MonthAndDayStamp" BuildVersion_StartDate="2011/6/17" BuildVersion_IncrementBeforeBuild="False" />
-    </VisualStudio>
-  </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <Import Project="../TShock.Common.props" />
+  
 </Project>

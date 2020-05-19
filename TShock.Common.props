@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LocalOTAPI Condition=" $(Configuration.Contains(LocalOTAPI)) ">true</LocalOTAPI>
+    <LocalOTAPI Condition=" !$(Configuration.Contains(LocalOTAPI)) ">false</LocalOTAPI>
+    <BinType Condition=" $(Configuration.StartsWith(Debug)) ">Debug</BinType>
+    <BinType Condition=" $(Configuration.StartsWith(Release)) ">Release</BinType>
+    <Configurations>Debug;Release;ReleaseLocalOTAPI;DebugLocalOTAPI</Configurations>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" $(LocalOTAPI) == true ">
+    <Reference Include="OTAPI">
+      <HintPath>$(ProjectDir)\..\TerrariaServerAPI\TShock.Modifications.Bootstrapper\bin\$(BinType)\Output\OTAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(LocalOTAPI) == false ">
+    <PackageReference Include="Mintaka.OTAPI" Version="0.0.4" />
+  </ItemGroup>
+
+</Project>

@@ -111,124 +111,27 @@ Let's get started.
 
 ### Building
 
-You need to get the source code. Using git, [clone this repository](https://help.github.com/articles/cloning-a-repository/). 
+#### Prerequisite
 
-The next set of instructions are the technical details to setup both the Terraria Server API and TShock. More importantly, the Terraria API steps here are written under the assumption that you are building TShock primarily. Before you start, you need to **initialize the git submodules** and then **update them**. You need to use the following commands to do this.
+1. git installed, you may gain help from [this](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+1. dotnet core sdk 3.1 installed, you may gain help from [this](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 
-          $ git submodule init
-          $ git submodule update
+#### Get the source code
 
-If you're using [GitHub Desktop](https://desktop.github.com), you need to perform additional steps. After cloning the TShock repository, go to the `Repository` menu and select `Open in Command Prompt`. If you don't have Git (not GitHub Desktop) installed, you can follow the prompts to to install Git for your command line. Once Git is installed, use this same process to get to the command prompt. Then, run the above commands. 
+Open your command line tool or terminal, input following commands
+```
+          $ git clone https://github.com/Pryaxis/TShock
+          $ git submodule update --init
+```
+These commands will pull the source code down to your disk
 
-#### On Windows
+#### Compile
 
-On Windows, you need to install [Visual Studio Community Edition](https://www.visualstudio.com/downloads/) or a better (more expensive) version of Visual Studio.
+If you are using IDE(like [Visual Studio](https://visualstudio.microsoft.com/) or [JetBrains Rider](https://www.jetbrains.com/rider/) ):
+1. Open TShock.sln in the source code folder
+1. Click the build button of your IDE
 
-##### The Terraria Server API
-
-1. Open the `TShock.4.OTAPI.sln` solution in the `TerrariaServerAPI` folder.
-
-1. Set the `TShock.Modifications.Bootstrapper` project as the StartUp project.
-
-1. Build the solution in either debug or release mode, depending on your preference. NuGet will automatically fetch the appropriate packages as a result of its magical powers.
-
-1. Hit the "Start" button in Visual Studio to run the `TShock Mintaka Bootstrapper`.
-
-1. Watch the output window and make sure that a non-zero number of modifications ran. When it completes, you have successfully bootstrapped `TShock Mintaka`.
-
-1. Set the `TerrariaServerAPI` project as the StartUp project.
-
-1. Build the solution in either debug or release mode, depending on your preference.
-
-1. Close `TShock.4.OTAPI.sln` in Visual Studio. 
-
-You need to re-run the patcher any time `OTAPI` updates. You need to rebuild `TerrariaServerAPI` any time that the submodule in `TShock` gets changed, if you're doing this from inside the TShock repo. You also need to update the submodules (`git submodule update`) if they're out of date on a pull too.
-
-##### TShock
-
-1. Open the `TShock.sln` solution in the root of the repository.
-
-1. Build the solution. It should correctly download NuGet packages automatically and build against the aforementioned `TerrariaServerAPI` project you just built.
-
-#### On macOS
-
-1. Install [Homebrew](https://brew.sh) if you haven't already.
-
-1. Install mono:
-
-          $ brew install mono
-
-1. Verify that mono is available:
-
-          $ mono --version
-
-          Mono JIT compiler version 5.0.1.1 (2017-02/5077205 Sun Sep 17 18:29:46 BST 2017)
-          ...
-
-1. Proceed to the [unix build steps](#unix-build-steps) to continue.
-
-#### On Linux
-
-1. **DO NOT** just install mono from your package manager unless told to do so. If you do and it's out of date, you probably won't be able to successfully develop for TShock.
-
-1. Follow the [official install instructions for mono](http://www.mono-project.com/download/). **DO** install `mono-complete` or you're missing components.
-
-1. Proceed to the [unix build steps](#unix-build-steps) to continue.
-
-#### On Unix
-
-1. You need to get NuGet. Download the latest `nuget.exe` from [NuGet](https://www.nuget.org/downloads).
-
-1. Make a `~/bin` folder if you don't have one. Then, put `nuget.exe` inside it.
-
-          $ mkdir ~/bin/
-          $ cp ~/downloads/nuget.exe ~/bin/
-
-1. Set an environment variable to store if you plan to build in debug or release.
-
-          $ export BUILD_MODE=Debug
-
-          or
-
-          $ export BUILD_MODE=Release
-
-
-##### The Terraria Server API
-
-1. Perform a NuGet restore in the directory above `TerrariaServerAPI`.
-
-          $ mono ~/bin/nuget.exe restore ./TerrariaServerAPI/
-
-1. Build the `TShock.4.OTAPI.sln` solution the configuration you chose:
-
-          $ xbuild ./TerrariaServerAPI/TShock.4.OTAPI.sln /p:Configuration=$BUILD_MODE
-
-1. Run the `TShock Mintaka Bootstrapper` with the TShock modifications. If you don't use `/bin/bash` as your primary shell, you might want to temporarily switch to it, or the bootstrapper may fail.
-
-          $ cd ./TerrariaServerAPI/TShock.Modifications.Bootstrapper/bin/$BUILD_MODE/
-          $ mono TShock.Modifications.Bootstrapper.exe -in=OTAPI.dll \
-                -mod=../../../TShock.Modifications.**/bin/$BUILD_MODE/TShock.Modifications.*.dll \ 
-                -o=Output/OTAPI.dll
-
-1. Verify that non-zero modifications ran successfully. Then, build the Terraria Server API executable.
-
-          $ cd ./../../../
-          $ xbuild ./TerrariaServerAPI/TerrariaServerAPI/TerrariaServerAPI.csproj \
-                /p:Configuration=$BUILD_MODE
-
-You need to re-run the patcher any time `OTAPI` updates. You need to rebuild `TerrariaServerAPI` any time that the submodule in `TShock` gets changed, if you're doing this from inside the TShock repo. You also need to update the submodules (`git submodule update`) if they're out of date on a pull too.
-
-##### TShock
-
-1. Perform a NuGet restore in `TShockAPI` folder that contains `TShockAPI.sln`.
-
-          $ mono ~/bin/nuget.exe restore
-
-1. Build TShock in the `BUILD_MODE` you set earlier.
-
-          $ xbuild ./TShockAPI.sln /p:Configuration=$BUILD_MODE
-
-You're done!
+If you are using command line, just input `dotnet build TShock.sln`
 
 ### Working with Terraria
 

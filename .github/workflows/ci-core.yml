@@ -1,0 +1,109 @@
+name: CI(.Net Core)
+
+on: [push]
+
+jobs:
+  ci:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.100'
+      - name: Build Patches Debug
+        run: Get-ChildItem -Path ./TerrariaServerAPI/ -Recurse -File -Include TShock.Modifications.*.csproj | % { dotnet build -f net462 -c Debug "$_" }
+      - name: Patch OTAPI Debug
+        run: |
+          cd ./TerrariaServerAPI/TShock.Modifications.Bootstrapper/bin/Debug/
+          ./TShock.Modifications.Bootstrapper.exe
+      - name: Build Patches Release
+        run: Get-ChildItem -Path ./TerrariaServerAPI/ -Recurse -File -Include TShock.Modifications.*.csproj | % { dotnet build -f net462 -c Release "$_" }
+      - name: Patch OTAPI Release
+        run: |
+          cd ./TerrariaServerAPI/TShock.Modifications.Bootstrapper/bin/Release/
+          ./TShock.Modifications.Bootstrapper.exe
+
+      - name: Build TShock Debug
+        run: dotnet build -f netcoreapp3.1 -c DebugLocalOTAPI ./TShock.Launcher/TShock.Launcher.csproj
+      - name: Build TShock Release
+        run: dotnet build -f netcoreapp3.1 -c ReleaseLocalOTAPI ./TShock.Launcher/TShock.Launcher.csproj
+
+      - name: Publish Debug any
+        run: dotnet publish -f netcoreapp3.1 -c DebugLocalOTAPI ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(any-debug)
+          path: TShock.Launcher/bin/DebugLocalOTAPI/netcoreapp3.1/publish
+      - name: Publish Release any
+        run: dotnet publish -f netcoreapp3.1 -c ReleaseLocalOTAPI ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(any-release)
+          path: TShock.Launcher/bin/ReleaseLocalOTAPI/netcoreapp3.1/publish/
+
+      - name: Publish Debug win-x64
+        run: dotnet publish -f netcoreapp3.1 -c DebugLocalOTAPI -r win-x64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(win-x64-debug)
+          path: TShock.Launcher/bin/DebugLocalOTAPI/netcoreapp3.1/win-x64/publish
+      - name: Publish Release win-x64
+        run: dotnet publish -f netcoreapp3.1 -c ReleaseLocalOTAPI -r win-x64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(win-x64-release)
+          path: TShock.Launcher/bin/ReleaseLocalOTAPI/netcoreapp3.1/win-x64/publish/
+
+      - name: Publish Debug linux-x64
+        run: dotnet publish -f netcoreapp3.1 -c DebugLocalOTAPI -r linux-x64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(linux-x64-debug)
+          path: TShock.Launcher/bin/DebugLocalOTAPI/netcoreapp3.1/linux-x64/publish
+      - name: Publish Release linux-x64
+        run: dotnet publish -f netcoreapp3.1 -c ReleaseLocalOTAPI -r linux-x64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(linux-x64-release)
+          path: TShock.Launcher/bin/ReleaseLocalOTAPI/netcoreapp3.1/linux-x64/publish/
+
+      - name: Publish Debug osx-x64
+        run: dotnet publish -f netcoreapp3.1 -c DebugLocalOTAPI -r osx-x64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(osx-x64-debug)
+          path: TShock.Launcher/bin/DebugLocalOTAPI/netcoreapp3.1/osx-x64/publish/
+      - name: Publish Release osx-x64
+        run: dotnet publish -f netcoreapp3.1 -c ReleaseLocalOTAPI -r osx-x64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(osx-x64-release)
+          path: TShock.Launcher/bin/ReleaseLocalOTAPI/netcoreapp3.1/osx-x64/publish/
+
+      - name: Publish Debug linux-arm
+        run: dotnet publish -f netcoreapp3.1 -c DebugLocalOTAPI -r linux-arm --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(linux-arm-debug)
+          path: TShock.Launcher/bin/DebugLocalOTAPI/netcoreapp3.1/linux-arm/publish/
+      - name: Publish Release linux-arm
+        run: dotnet publish -f netcoreapp3.1 -c ReleaseLocalOTAPI -r linux-arm --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(linux-arm-release)
+          path: TShock.Launcher/bin/ReleaseLocalOTAPI/netcoreapp3.1/linux-arm/publish/
+
+      - name: Publish Debug linux-arm64
+        run: dotnet publish -f netcoreapp3.1 -c DebugLocalOTAPI -r linux-arm64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(linux-arm64-debug)
+          path: TShock.Launcher/bin/DebugLocalOTAPI/netcoreapp3.1/linux-arm64/publish/
+      - name: Publish Release linux-arm64
+        run: dotnet publish -f netcoreapp3.1 -c ReleaseLocalOTAPI -r linux-arm64 --self-contained true -p:PublishSingleFile=true ./TShock.Launcher/TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(linux-arm64-release)
+          path: TShock.Launcher/bin/ReleaseLocalOTAPI/netcoreapp3.1/linux-arm64/publish/

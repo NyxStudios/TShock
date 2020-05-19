@@ -1226,7 +1226,7 @@ namespace TShockAPI
 				if (account != null)
 				{
 					DateTime LastSeen;
-					string Timezone = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).Hours.ToString("+#;-#");
+					string Timezone = TimeZoneInfo.Utc.GetUtcOffset(DateTime.Now).Hours.ToString("+#;-#");
 
 					if (DateTime.TryParse(account.LastAccessed, out LastSeen))
 					{
@@ -1912,12 +1912,11 @@ namespace TShockAPI
 			args.Player.SendInfoMessage("An update check has been queued.");
 			try
 			{
-				TShock.UpdateManager.UpdateCheckAsync(null);
+				TShock.UpdateManager.UpdateCheckAsync(null).Start();
 			}
 			catch (Exception)
 			{
 				//swallow the exception
-				return;
 			}
 		}
 

@@ -168,7 +168,7 @@ namespace TShockAPI.DB
 
 			if (_database.Query("UPDATE Users SET UserGroup = @0 WHERE Username = @1;", group, account.Name) == 0)
 				throw new UserAccountNotExistException(account.Name);
-			
+
 			try
 			{
 				// Update player group reference for any logged in player
@@ -438,13 +438,13 @@ namespace TShockAPI.DB
 		{
 			try
 			{
-				if (BCrypt.Net.BCrypt.Verify(password, Password)) 
+				if (BCrypt.Net.BCrypt.Verify(password, Password))
 				{
 					// If necessary, perform an upgrade to the highest work factor.
 					UpgradePasswordWorkFactor(password);
 					return true;
 				}
-			} 
+			}
 			catch (SaltParseException)
 			{
 				if (String.Equals(HashPassword(password), Password, StringComparison.InvariantCultureIgnoreCase))
@@ -547,7 +547,7 @@ namespace TShockAPI.DB
 			{
 					{"sha512", () => new SHA512Managed()},
 					{"sha256", () => new SHA256Managed()},
-					{"md5", () => new MD5Cng()},
+					// {"md5", () => new MD5Cng()},
 					{"sha512-xp", () => SHA512.Create()},
 					{"sha256-xp", () => SHA256.Create()},
 					{"md5-xp", () => MD5.Create()},

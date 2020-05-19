@@ -1,4 +1,4 @@
 [submodule "TerrariaServerAPI"]
 	path = TerrariaServerAPI
-	url = https://github.com/NyxStudios/TerrariaAPI-Server.git
+	url = https://github.com/Pryaxis/TerrariaAPI-Server.git
 	ignore = dirty

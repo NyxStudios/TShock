@@ -1,0 +1,39 @@
+name: CI(.Net Framework)
+
+on: [push]
+
+jobs:
+  ci:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.100'
+      - name: Build Patches Debug
+        run: Get-ChildItem -Path ./TerrariaServerAPI/ -Recurse -File -Include TShock.Modifications.*.csproj | % { dotnet build -f net462 -c Debug "$_" }
+      - name: Patch OTAPI Debug
+        run: |
+          cd ./TerrariaServerAPI/TShock.Modifications.Bootstrapper/bin/Debug/
+          ./TShock.Modifications.Bootstrapper.exe
+      - name: Build Patches Release
+        run: Get-ChildItem -Path ./TerrariaServerAPI/ -Recurse -File -Include TShock.Modifications.*.csproj | % { dotnet build -f net462 -c Release "$_" }
+      - name: Patch OTAPI Release
+        run: |
+          cd ./TerrariaServerAPI/TShock.Modifications.Bootstrapper/bin/Release/
+          ./TShock.Modifications.Bootstrapper.exe
+
+      - name: TShock Debug
+        run: dotnet build -f net462 -c DebugLocalOTAPI .\TShock.Launcher\TShock.Launcher.csproj
+      - name: TShock Release
+        run: dotnet build -f net462 -c ReleaseLocalOTAPI .\TShock.Launcher\TShock.Launcher.csproj
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(.netfx-release)
+          path: TShock.Launcher\bin\ReleaseLocalOTAPI
+      - uses: actions/upload-artifact@master
+        with:
+          name: ExperimentalTShock(.netfx-debug)
+          path: TShock.Launcher\bin\DebugLocalOTAPI

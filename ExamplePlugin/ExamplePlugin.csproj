@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup> 
+
+  <ItemGroup>
+    <ProjectReference Include="..\TShockAPI\TShockAPI.csproj" />
+  </ItemGroup>
+
+  <Import Project="../TShock.Common.props" />
+
+</Project>
