@@ -80,6 +80,22 @@ namespace TShockAPI.Configuration
 	public class ServerSideConfig : ConfigFile<SscSettings>
 	{
 		/// <summary>
+		/// Upgrades the configuration file from the old format if required, then reads and returns the currently configured <see cref="SscSettings"/>
+		/// </summary>
+		/// <param name="json"></param>
+		/// <param name="incompleteSettings"></param>
+		/// <returns></returns>
+		public override SscSettings ConvertJson(string json, out bool incompleteSettings)
+		{
+			var settings = FileTools.LoadConfigAndCheckForChanges<SscSettings>(json, out incompleteSettings);
+
+			Settings = settings;
+			OnConfigRead?.Invoke(this);
+
+			return settings;
+		}
+
+		/// <summary>
 		/// Dumps all configuration options to a text file in Markdown format
 		/// </summary>
 		public static void DumpDescriptions()

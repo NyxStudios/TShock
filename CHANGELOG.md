@@ -18,6 +18,7 @@ This is the rolling changelog for TShock for Terraria. Use past tense when addin
 * Fixed /worldmode not synchronising data to players after updating the world state (@bartico6, @Arthri)
 * Added `OnSendNetData` hook to TSAPI, which enables developers to intercept traffic being sent from the server to clients. (@Stealownz)
 * Fixed false positive `OnNPCAddBuff` detection when throwing rotten eggs at town NPCs while wearing Frost armor set. (@moisterrific)
+* Fixed SSC config getting wiped when upgrading from old version to new. (@QuiCM)
 
 ## TShock 4.5.3
 * Added permissions for using Teleportation Potions, Magic Conch, and Demon Conch. (@drunderscore)

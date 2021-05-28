@@ -21,11 +21,13 @@ namespace TShockAPI.Configuration
 		public static Action<ConfigFile<TSettings>> OnConfigRead;
 
 		/// <summary>
-		/// Reads json-formatted settings from a given path
+		/// Reads json-formatted settings from a given path.
+		/// If the given path does not exist <paramref name="incompleteSettings"/> is set to <see langword="true"/>
+		/// and a default <typeparamref name="TSettings"/> object is returned
 		/// </summary>
 		/// <param name="path">The path to the file containing the settings</param>
 		/// <param name="incompleteSettings">
-		/// Whether the config object has any new fields in it, meaning that the config file has to be
+		/// Whether the config object has any new fields in it, meaning that the config file should be
 		/// overwritten.
 		/// </param>
 		/// <returns>Settings object</returns>
@@ -60,7 +62,7 @@ namespace TShockAPI.Configuration
 		}
 
 		/// <summary>
-		/// Converts a json-formatted string into the settings object used by this configuration
+		/// Converts a json-formatted string into the settings object used by this configuration. Invokes the <see cref="OnConfigRead"/> hook
 		/// </summary>
 		/// <param name="json">Json string to parse</param>
 		/// <param name="incompleteSettings">Whether or not the json string contained an incomplete set of settings</param>
@@ -78,7 +80,7 @@ namespace TShockAPI.Configuration
 		/// <summary>
 		/// Writes the configuration to a given path
 		/// </summary>
-		/// <param name="path">string path - Location to put the config file</param>
+		/// <param name="path">The file path the configuration file will be written to</param>
 		public virtual void Write(string path)
 		{
 			using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write))
