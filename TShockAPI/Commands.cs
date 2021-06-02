@@ -1,4 +1,4 @@
-﻿/*
+/*
 TShock, a server mod for Terraria
 Copyright (C) 2011-2019 Pryaxis & TShock Contributors
 
@@ -621,7 +621,10 @@ namespace TShockAPI
 			{
 				HelpText = "Shows the server's rules."
 			});
-
+			add(new Command(Echo, "echo")
+			{
+				HelpText = "Echo"
+			});
 			TShockCommands = new ReadOnlyCollection<Command>(tshockCommands);
 		}
 
@@ -1168,6 +1171,17 @@ namespace TShockAPI
 			args.Player.SendInfoMessage("Seed: " + WorldGen.currentWorldSeed);
 		}
 
+		private static void Echo(CommandArgs args)
+		{
+			var str = String.Join(" ", args.Parameters.ToArray());
+			// args.Player.SendData(PacketTypes.CreateCombatTextExtended, String.Join(" ", args.Parameters.ToArray()), (int) Color.Red.PackedValue, args.Player.X, args.Player.Y + 20);
+			// args.Player.SendData(PacketTypes.SmartTextMessage, str, 0, (int) 255, (int) 0, (int) 0, 460);
+			int statusMax = (Netplay.Clients[args.Player.Index].StatusMax += 200);
+			args.Player.SendData(PacketTypes.Status, "\n\n\n\n\n\n\n\n\n\n\n\n" + str + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" , statusMax, new BitsByte(true, true));
+			// args.Player.SendData(PacketTypes.Status, str, statusMax, new BitsByte(false, false));
+			return;
+		}
+
 		#endregion
 
 		#region Player Management Commands
@@ -1264,7 +1278,7 @@ namespace TShockAPI
 				string reason = args.Parameters.Count > 1
 									? String.Join(" ", args.Parameters.GetRange(1, args.Parameters.Count - 1))
 									: "Misbehaviour.";
-				if (!players[0].Kick(reason, !args.Player.RealPlayer, false, args.Player.Name))
+				if (!players[0].Kick(reason, !args.Player.RealPlayer, args.Silent, args.Player.Name))
 				{
 					args.Player.SendErrorMessage("You can't kick another admin!");
 				}
@@ -2177,6 +2191,7 @@ namespace TShockAPI
 				{
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax:  {0}worldevent invasion [invasion type] [invasion wave]", Specifier);
 					args.Player.SendErrorMessage("Valid invasion types: {0}", String.Join(", ", _validInvasions));
+					args.Player.SendErrorMessage("Note: Silent invasions will not produce any output.");
 					return;
 				}
 
@@ -2185,19 +2200,28 @@ namespace TShockAPI
 				{
 					case "goblin":
 					case "goblins":
-						TSPlayer.All.SendInfoMessage("{0} has started a goblin army invasion.", args.Player.Name);
+						if (!args.Silent)
+						{
+							TSPlayer.All.SendInfoMessage("{0} has started a goblin army invasion.", args.Player.Name);
+						}
 						TShock.Utils.StartInvasion(1);
 						break;
 
 					case "snowman":
 					case "snowmen":
-						TSPlayer.All.SendInfoMessage("{0} has started a snow legion invasion.", args.Player.Name);
+						if (!args.Silent)
+						{
+							TSPlayer.All.SendInfoMessage("{0} has started a snow legion invasion.", args.Player.Name);
+						}
 						TShock.Utils.StartInvasion(2);
 						break;
 
 					case "pirate":
 					case "pirates":
-						TSPlayer.All.SendInfoMessage("{0} has started a pirate invasion.", args.Player.Name);
+						if (!args.Silent)
+						{
+							TSPlayer.All.SendInfoMessage("{0} has started a pirate invasion.", args.Player.Name);
+						}
 						TShock.Utils.StartInvasion(3);
 						break;
 
@@ -2216,7 +2240,10 @@ namespace TShockAPI
 						Main.bloodMoon = false;
 						NPC.waveKills = 0f;
 						NPC.waveNumber = wave;
-						TSPlayer.All.SendInfoMessage("{0} started the pumpkin moon at wave {1}!", args.Player.Name, wave);
+						if (!args.Silent)
+						{
+							TSPlayer.All.SendInfoMessage("{0} started the pumpkin moon at wave {1}!", args.Player.Name, wave);
+						}
 						break;
 
 					case "frost":
@@ -2234,12 +2261,18 @@ namespace TShockAPI
 						Main.bloodMoon = false;
 						NPC.waveKills = 0f;
 						NPC.waveNumber = wave;
-						TSPlayer.All.SendInfoMessage("{0} started the frost moon at wave {1}!", args.Player.Name, wave);
+						if (!args.Silent)
+						{
+							TSPlayer.All.SendInfoMessage("{0} started the frost moon at wave {1}!", args.Player.Name, wave);
+						}
 						break;
 
 					case "martian":
 					case "martians":
-						TSPlayer.All.SendInfoMessage("{0} has started a martian invasion.", args.Player.Name);
+						if (!args.Silent)
+						{
+							TSPlayer.All.SendInfoMessage("{0} has started a martian invasion.", args.Player.Name);
+						}
 						TShock.Utils.StartInvasion(4);
 						break;
 
@@ -2251,11 +2284,17 @@ namespace TShockAPI
 			else if (DD2Event.Ongoing)
 			{
 				DD2Event.StopInvasion();
-				TSPlayer.All.SendInfoMessage("{0} has ended the Old One's Army event.", args.Player.Name);
+				if (!args.Silent)
+				{
+					TSPlayer.All.SendInfoMessage("{0} has ended the Old One's Army event.", args.Player.Name);
+				}
 			}
 			else
 			{
-				TSPlayer.All.SendInfoMessage("{0} has ended the invasion.", args.Player.Name);
+				if (!args.Silent)
+				{
+					TSPlayer.All.SendInfoMessage("{0} has ended the invasion.", args.Player.Name);
+				}
 				Main.invasionSize = 0;
 			}
 		}
@@ -2265,12 +2304,18 @@ namespace TShockAPI
 			if (Terraria.GameContent.Events.Sandstorm.Happening)
 			{
 				Terraria.GameContent.Events.Sandstorm.StopSandstorm();
-				TSPlayer.All.SendInfoMessage("{0} stopped the sandstorm.", args.Player.Name);
+				if (!args.Silent)
+				{
+					TSPlayer.All.SendInfoMessage("{0} stopped the sandstorm.", args.Player.Name);
+				}
 			}
 			else
 			{
 				Terraria.GameContent.Events.Sandstorm.StartSandstorm();
-				TSPlayer.All.SendInfoMessage("{0} started a sandstorm.", args.Player.Name);
+				if (!args.Silent)
+				{
+					TSPlayer.All.SendInfoMessage("{0} started a sandstorm.", args.Player.Name);
+				}
 			}
 		}
 
@@ -2736,6 +2781,12 @@ namespace TShockAPI
 
 		private static void TP(CommandArgs args)
 		{
+			if (args.Silent && !args.Player.HasPermission(Permissions.tpsilent))
+			{
+				args.Player.SendErrorMessage("You do not have permission to run teleport silently.");
+				return;
+			}
+
 			if (args.Parameters.Count != 1 && args.Parameters.Count != 2)
 			{
 				if (args.Player.HasPermission(Permissions.tpothers))
@@ -2802,17 +2853,17 @@ namespace TShockAPI
 							{
 								if (args.Player != source)
 								{
-									if (args.Player.HasPermission(Permissions.tpsilent))
-										source.SendSuccessMessage("You were teleported to {0}.", target.Name);
-									else
+									if (!args.Silent)
+									{
 										source.SendSuccessMessage("{0} teleported you to {1}.", args.Player.Name, target.Name);
+									}
 								}
 								if (args.Player != target)
 								{
-									if (args.Player.HasPermission(Permissions.tpsilent))
-										target.SendInfoMessage("{0} was teleported to you.", source.Name);
-									if (!args.Player.HasPermission(Permissions.tpsilent))
+									if (!args.Silent)
+									{
 										target.SendInfoMessage("{0} teleported {1} to you.", args.Player.Name, source.Name);
+									}
 								}
 							}
 						}
@@ -2842,17 +2893,17 @@ namespace TShockAPI
 					{
 						if (args.Player != source)
 						{
-							if (args.Player.HasPermission(Permissions.tpsilent))
-								source.SendSuccessMessage("You were teleported to {0}.", target.Name);
-							else
+							if (!args.Silent)
+							{
 								source.SendSuccessMessage("{0} teleported you to {1}.", args.Player.Name, target.Name);
+							}
 						}
 						if (args.Player != target)
 						{
-							if (args.Player.HasPermission(Permissions.tpsilent))
-								target.SendInfoMessage("{0} was teleported to you.", source.Name);
-							if (!args.Player.HasPermission(Permissions.tpsilent))
+							if (!args.Silent)
+							{
 								target.SendInfoMessage("{0} teleported {1} to you.", args.Player.Name, source.Name);
+							}
 						}
 					}
 				}
@@ -2861,6 +2912,11 @@ namespace TShockAPI
 
 		private static void TPHere(CommandArgs args)
 		{
+			if (args.Silent && !args.Player.HasPermission(Permissions.tpsilent))
+			{
+				args.Player.SendErrorMessage("You do not have permission to run tphere silently.");
+				return;
+			}
 			if (args.Parameters.Count < 1)
 			{
 				if (args.Player.HasPermission(Permissions.tpallothers))
@@ -2885,7 +2941,7 @@ namespace TShockAPI
 					{
 						if (Main.player[i].active && (Main.player[i] != args.TPlayer))
 						{
-							if (TShock.Players[i].Teleport(args.TPlayer.position.X, args.TPlayer.position.Y))
+							if (TShock.Players[i].Teleport(args.TPlayer.position.X, args.TPlayer.position.Y) && !args.Silent)
 								TShock.Players[i].SendSuccessMessage(String.Format("You were teleported to {0}.", args.Player.Name));
 						}
 					}
@@ -2901,7 +2957,10 @@ namespace TShockAPI
 				var plr = players[0];
 				if (plr.Teleport(args.TPlayer.position.X, args.TPlayer.position.Y))
 				{
-					plr.SendInfoMessage("You were teleported to {0}.", args.Player.Name);
+					if (!args.Silent)
+					{
+						plr.SendInfoMessage("You were teleported to {0}.", args.Player.Name);
+					}
 					args.Player.SendSuccessMessage("Teleported {0} to yourself.", plr.Name);
 				}
 			}
@@ -4338,19 +4397,31 @@ namespace TShockAPI
 			{
 				case "day":
 					TSPlayer.Server.SetTime(true, 0.0);
-					TSPlayer.All.SendInfoMessage("{0} set the time to 4:30.", args.Player.Name);
+					if (!args.Silent)
+					{
+						TSPlayer.All.SendInfoMessage("{0} set the time to 4:30.", args.Player.Name);
+					}
 					break;
 				case "night":
 					TSPlayer.Server.SetTime(false, 0.0);
-					TSPlayer.All.SendInfoMessage("{0} set the time to 19:30.", args.Player.Name);
+					if (!args.Silent)
+					{
+						TSPlayer.All.SendInfoMessage("{0} set the time to 19:30.", args.Player.Name);
+					}
 					break;
 				case "noon":
 					TSPlayer.Server.SetTime(true, 27000.0);
-					TSPlayer.All.SendInfoMessage("{0} set the time to 12:00.", args.Player.Name);
+					if (!args.Silent)
+					{
+						TSPlayer.All.SendInfoMessage("{0} set the time to 12:00.", args.Player.Name);
+					}
 					break;
 				case "midnight":
 					TSPlayer.Server.SetTime(false, 16200.0);
-					TSPlayer.All.SendInfoMessage("{0} set the time to 0:00.", args.Player.Name);
+					if (!args.Silent)
+					{
+						TSPlayer.All.SendInfoMessage("{0} set the time to 0:00.", args.Player.Name);
+					}
 					break;
 				default:
 					string[] array = args.Parameters[0].Split(':');
@@ -4382,7 +4453,10 @@ namespace TShockAPI
 					{
 						TSPlayer.Server.SetTime(true, (double)(time * 3600.0m));
 					}
-					TSPlayer.All.SendInfoMessage("{0} set the time to {1}:{2:D2}.", args.Player.Name, hours, minutes);
+					if (!args.Silent)
+					{
+						TSPlayer.All.SendInfoMessage("{0} set the time to {1}:{2:D2}.", args.Player.Name, hours, minutes);
+					}
 					break;
 			}
 		}
@@ -5810,7 +5884,10 @@ namespace TShockAPI
 			}
 			if (done > 0)
 			{
-				TSPlayer.All.SendInfoMessage("{0} renamed the {1}.", args.Player.Name, args.Parameters[0]);
+				if (!args.Silent)
+				{
+					TSPlayer.All.SendInfoMessage("{0} renamed the {1}.", args.Player.Name, args.Parameters[0]);
+				}
 			}
 			else
 			{
@@ -5893,7 +5970,10 @@ namespace TShockAPI
 							if (plr.GiveItemCheck(item.type, EnglishLanguage.GetItemNameById(item.type), itemAmount, prefix))
 							{
 								args.Player.SendSuccessMessage(string.Format("Gave {0} {1} {2}(s).", plr.Name, itemAmount, item.Name));
-								plr.SendSuccessMessage(string.Format("{0} gave you {1} {2}(s).", args.Player.Name, itemAmount, item.Name));
+								if (!args.Silent)
+								{
+									plr.SendSuccessMessage(string.Format("{0} gave you {1} {2}(s).", args.Player.Name, itemAmount, item.Name));
+								}
 							}
 							else
 							{
@@ -5954,7 +6034,10 @@ namespace TShockAPI
 			else
 			{
 				args.Player.SendSuccessMessage(string.Format("You just healed {0}", playerToHeal.Name));
-				playerToHeal.SendSuccessMessage(string.Format("{0} just healed you!", args.Player.Name));
+				if (!args.Silent)
+				{
+					playerToHeal.SendSuccessMessage(string.Format("{0} just healed you!", args.Player.Name));
+				}
 			}
 		}
 
@@ -6046,9 +6129,12 @@ namespace TShockAPI
 					args.Player.SendSuccessMessage(string.Format("You have buffed {0} with {1} ({2}) for {3} seconds!",
 														  foundplr[0].Name, TShock.Utils.GetBuffName(id),
 														  TShock.Utils.GetBuffDescription(id), (time)));
-					foundplr[0].SendSuccessMessage(string.Format("{0} has buffed you with {1} ({2}) for {3} seconds!",
-														  args.Player.Name, TShock.Utils.GetBuffName(id),
-														  TShock.Utils.GetBuffDescription(id), (time)));
+					if (!args.Silent)
+					{
+						foundplr[0].SendSuccessMessage(string.Format("{0} has buffed you with {1} ({2}) for {3} seconds!",
+															  args.Player.Name, TShock.Utils.GetBuffName(id),
+															  TShock.Utils.GetBuffDescription(id), (time)));
+					}
 				}
 				else
 					args.Player.SendErrorMessage("Invalid buff ID!");

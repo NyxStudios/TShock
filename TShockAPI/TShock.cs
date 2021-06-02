@@ -933,6 +933,12 @@ namespace TShockAPI
 				Netplay.HasClients = true;
 			}
 
+			// foreach (TSPlayer player in Players)
+			// {
+			// 	int statusMax = (Netplay.Clients[player.Index].StatusMax += 17);
+			// 	player.SendData(PacketTypes.Status, "dog butts", statusMax, new BitsByte(true, true));
+			// }
+
 			if (Backups.IsBackupTime)
 				Backups.Backup();
 			//call these every second, not every update
