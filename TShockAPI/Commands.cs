@@ -547,7 +547,7 @@ namespace TShockAPI
 			});
 			add(new Command(Permissions.heal, Heal, "heal")
 			{
-				HelpText = "Heals a player in HP and MP."
+				HelpText = "Heals the HP of yourself or another player."
 			});
 			add(new Command(Permissions.kill, Kill, "kill")
 			{
@@ -1508,7 +1508,7 @@ namespace TShockAPI
 
 				if (banUuid)
 				{
-					banResult = DoBan($"{Identifier.UUID}{player.UUID}", reason, expiration);					
+					banResult = DoBan($"{Identifier.UUID}{player.UUID}", reason, expiration);
 				}
 
 				if (banName)
@@ -1571,11 +1571,11 @@ namespace TShockAPI
 					args.Player.SendMessage($"Invalid Ban List syntax. Refer to {"ban help list".Color(Utils.BoldHighlight)} for details on how to use the {"ban list".Color(Utils.BoldHighlight)} command", Color.White);
 					return;
 				}
-				
+
 				var bans = from ban in TShock.Bans.Bans
-							   where ban.Value.ExpirationDateTime > DateTime.UtcNow
-							   orderby ban.Value.ExpirationDateTime ascending
-							   select $"[{ban.Key.Color(Utils.GreenHighlight)}] {ban.Value.Identifier.Color(PickColorForBan(ban.Value))}";
+						   where ban.Value.ExpirationDateTime > DateTime.UtcNow
+						   orderby ban.Value.ExpirationDateTime ascending
+						   select $"[{ban.Key.Color(Utils.GreenHighlight)}] {ban.Value.Identifier.Color(PickColorForBan(ban.Value))}";
 
 				PaginationTools.SendPage(args.Player, pageNumber, bans.ToList(),
 					new PaginationTools.Settings
@@ -1610,7 +1610,7 @@ namespace TShockAPI
 
 				DisplayBanDetails(ban);
 			}
-			
+
 			string subcmd = args.Parameters.Count == 0 ? "help" : args.Parameters[0].ToLower();
 			switch (subcmd)
 			{
@@ -2020,7 +2020,7 @@ namespace TShockAPI
 			"pirates",
 			"pumpkinmoon",
 			"frostmoon",
-                      "martians"
+					  "martians"
 		};
 
 		private static void ManageWorldEvent(CommandArgs args)
@@ -2616,7 +2616,7 @@ namespace TShockAPI
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					spawnName = "a Solar Pillar";
 					break;
-				case "nebula pillar": 
+				case "nebula pillar":
 					npc.SetDefaults(507);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					spawnName = "a Nebula Pillar";
@@ -2922,13 +2922,13 @@ namespace TShockAPI
 				var englishName = EnglishLanguage.GetNpcNameById(npc.netID);
 
 				if (string.Equals(npc.FullName, npcStr, StringComparison.InvariantCultureIgnoreCase) ||
-				    string.Equals(englishName, npcStr, StringComparison.InvariantCultureIgnoreCase))
+					string.Equals(englishName, npcStr, StringComparison.InvariantCultureIgnoreCase))
 				{
 					matches = new List<NPC> { npc };
 					break;
 				}
 				if (npc.FullName.ToLowerInvariant().StartsWith(npcStr.ToLowerInvariant()) ||
-				    englishName?.StartsWith(npcStr, StringComparison.InvariantCultureIgnoreCase) == true)
+					englishName?.StartsWith(npcStr, StringComparison.InvariantCultureIgnoreCase) == true)
 					matches.Add(npc);
 			}
 
@@ -3591,7 +3591,7 @@ namespace TShockAPI
 					return;
 				default:
 					args.Player.SendErrorMessage("Invalid subcommand! Type {0}group help for more information on valid commands.", Specifier);
-				return;
+					return;
 			}
 		}
 		#endregion Group Management
@@ -4946,7 +4946,7 @@ namespace TShockAPI
 								break;
 							}
 
-							if(TShock.Regions.RenameRegion(oldName, newName))
+							if (TShock.Regions.RenameRegion(oldName, newName))
 							{
 								args.Player.SendInfoMessage("Region renamed successfully!");
 							}
@@ -5505,7 +5505,7 @@ namespace TShockAPI
 
 		private static void SyncLocalArea(CommandArgs args)
 		{
-			args.Player.SendTileSquare((int) args.Player.TileX, (int) args.Player.TileY, 32);
+			args.Player.SendTileSquare((int)args.Player.TileX, (int)args.Player.TileY, 32);
 			args.Player.SendWarningMessage("Sync'd!");
 			return;
 		}
@@ -5917,13 +5917,93 @@ namespace TShockAPI
 		private static void Heal(CommandArgs args)
 		{
 			TSPlayer playerToHeal;
-			if (args.Parameters.Count > 0)
+			int maxHp = args.Player.TPlayer.statLifeMax2;
+			int currentHp = args.Player.TPlayer.statLife;
+			int amount = maxHp - currentHp;
+			playerToHeal = args.Player;
+
+			if (args.Parameters.Count > 2)
 			{
-				string plStr = String.Join(" ", args.Parameters);
+				args.Player.SendErrorMessage($"Invalid syntax! Proper syntax: {Specifier}heal [amount] [player]");
+				return;
+			}
+
+			if (args.Parameters.Count < 1)
+			{
+				if (args.Player.RealPlayer)
+				{
+					if (!args.Player.Dead)
+					{
+						playerToHeal.Heal(amount);
+						if (amount == 0)
+						{
+							args.Player.SendErrorMessage("Your HP is already full!");
+							return;
+						}
+						else
+						{
+							args.Player.SendSuccessMessage($"You just healed yourself for {amount} HP!");
+						}
+					}
+					else
+					{
+						args.Player.SendErrorMessage("You are already dead!");
+						return;
+					}
+				}
+				else
+				{
+					args.Player.SendErrorMessage("You can't heal yourself as the server console!");
+					return;
+				}
+			}
+
+			if (args.Parameters.Count == 1)
+			{
+				if (args.Player.RealPlayer)
+				{
+					if (!args.Player.Dead)
+					{
+						int.TryParse(args.Parameters[0], out amount);
+						if (amount < 1 || amount > maxHp)
+						{
+							amount = maxHp - currentHp;
+							playerToHeal.Heal(amount);
+						}
+						else
+						{
+							playerToHeal.Heal(amount);
+						}
+						if (amount == 0)
+						{
+							args.Player.SendErrorMessage("Your HP is already full!");
+							return;
+						}
+						else
+						{
+							args.Player.SendSuccessMessage($"You just healed yourself for {amount} HP!");
+						}
+					}
+					else
+					{
+						args.Player.SendErrorMessage("You are already dead!");
+						return;
+					}
+				}
+				else
+				{
+					args.Player.SendErrorMessage("You can't heal yourself as the server console!");
+					return;
+				}
+			}
+
+			if (args.Parameters.Count == 2)
+			{
+				string plStr = String.Join(" ", args.Parameters[1]);
 				var players = TSPlayer.FindByNameOrID(plStr);
 				if (players.Count == 0)
 				{
-					args.Player.SendErrorMessage("Invalid player!");
+					args.Player.SendErrorMessage($"Invalid player! Are you sure {plStr} is online?");
 					return;
 				}
 				else if (players.Count > 1)
@@ -5933,28 +6013,54 @@ namespace TShockAPI
 				}
 				else
 				{
+					int targetMaxHp = players[0].TPlayer.statLifeMax2;
+					int targetCurrentHp = players[0].TPlayer.statLife;
 					playerToHeal = players[0];
-				}
-			}
-			else if (!args.Player.RealPlayer)
-			{
-				args.Player.SendErrorMessage("You can't heal yourself!");
-				return;
-			}
-			else
-			{
-				playerToHeal = args.Player;
-			}
+					if (!players[0].Dead)
+					{
+						int.TryParse(args.Parameters[0], out amount);
+						if (amount < 1 || amount > targetMaxHp)
+						{
+							amount = targetMaxHp - targetCurrentHp;
+							playerToHeal.Heal(amount);
+						}
+						else
+						{
+							playerToHeal.Heal(amount);
+						}
+					}
+					else
+					{
+						args.Player.SendErrorMessage($"{players[0].Name} is already dead!");
+						return;
+					}
 
-			playerToHeal.Heal();
-			if (playerToHeal == args.Player)
-			{
-				args.Player.SendSuccessMessage("You just got healed!");
-			}
-			else
-			{
-				args.Player.SendSuccessMessage(string.Format("You just healed {0}", playerToHeal.Name));
-				playerToHeal.SendSuccessMessage(string.Format("{0} just healed you!", args.Player.Name));
+					if (players[0] != args.Player)
+					{
+						if (amount == 0)
+						{
+							args.Player.SendErrorMessage($"{players[0].Name}'s HP is already full!");
+							return;
+						}
+						else
+						{
+							args.Player.SendSuccessMessage($"You just healed {players[0].Name} for {amount} HP!");
+							if (!args.Silent)
+							{
+								playerToHeal.SendSuccessMessage($"{args.Player.Name} just healed you for {amount} HP!");
+							}
+						}
+					}
+					else
+					{
+						if (amount == 0)
+						{
+							args.Player.SendErrorMessage("Your HP is already full!");
+							return;
+						}
+						args.Player.SendSuccessMessage($"You just healed yourself for {amount} HP!");
+					}
+				}
 			}
 		}
 
