@@ -1,0 +1,1 @@
+Welcome to the [[TShock]] for [[Terraria]] documentation and help resource!
