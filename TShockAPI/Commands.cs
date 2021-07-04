@@ -41,6 +41,8 @@ using Terraria.GameContent.Creative;
 
 namespace TShockAPI
 {
+	// Ignore XML comment warnings for commands & command init
+	#pragma warning disable CS1591
 	public delegate void CommandDelegate(CommandArgs args);
 
 	public class CommandArgs : EventArgs
@@ -6092,8 +6094,9 @@ namespace TShockAPI
 						"- Gem trees :",
 						"     'topaz', 'amethyst', 'sapphire', 'emerald', 'ruby', 'diamond', 'amber'.",
 						"- Misc :",
-						"     'cactus', 'herb', 'mushroom'."
+						"     'mushroom'."
 					};
+						// Misc : + 'cactus', 'herb',
 
 						PaginationTools.SendPage(args.Player, pageNumber, lines,
 								new PaginationTools.Settings
@@ -6109,10 +6112,10 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 2;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Grass;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
+					Main.tile[x, y - 1].wall = WallID.None;
 					WorldGen.GrowTree(x, y);
 					name = "Basic Tree";
 					break;
@@ -6121,10 +6124,10 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 147;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.SnowBlock;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
+					Main.tile[x, y - 1].wall = WallID.None;
 					WorldGen.GrowTree(x, y);
 					name = "Boreal Tree";
 					break;
@@ -6133,10 +6136,10 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 60;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.JungleGrass;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
+					Main.tile[x, y - 1].wall = WallID.None;
 					WorldGen.GrowTree(x, y);
 					name = "Rich Mahogany";
 					break;
@@ -6145,11 +6148,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 2;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Grass;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(596, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.VanityTreeSakura, x, y);
 					name = "Sakura Tree";
 					break;
 
@@ -6157,11 +6160,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 2;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Grass;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(616, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.VanityTreeYellowWillow, x, y);
 					name = "Willow Tree";
 					break;
 
@@ -6171,10 +6174,10 @@ namespace TShockAPI
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y].active(true);
-							Main.tile[i, y].type = 199;
-							Main.tile[i, y].wall = 0;
+							Main.tile[i, y].type = TileID.CrimsonGrass;
+							Main.tile[i, y].wall = WallID.None;
 						}
-						Main.tile[x, y - 1].wall = 0;
+						Main.tile[x, y - 1].wall = WallID.None;
 						WorldGen.GrowTree(x, y);
 						name = "Shadewood tree";
 					}
@@ -6187,10 +6190,10 @@ namespace TShockAPI
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y].active(true);
-							Main.tile[i, y].type = 23;
-							Main.tile[i, y].wall = 0;
+							Main.tile[i, y].type = TileID.CorruptGrass;
+							Main.tile[i, y].wall = WallID.None;
 						}
-						Main.tile[x, y - 1].wall = 0;
+						Main.tile[x, y - 1].wall = WallID.None;
 						WorldGen.GrowTree(x, y);
 						name = "Ebonwood Tree";
 					}
@@ -6203,10 +6206,10 @@ namespace TShockAPI
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y].active(true);
-							Main.tile[i, y].type = 109;
-							Main.tile[i, y].wall = 0;
+							Main.tile[i, y].type = TileID.HallowedGrass;
+							Main.tile[i, y].wall = WallID.None;
 						}
-						Main.tile[x, y - 1].wall = 0;
+						Main.tile[x, y - 1].wall = WallID.None;
 						WorldGen.GrowTree(x, y);
 						name = "Pearlwood Tree";
 					}
@@ -6217,16 +6220,16 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 53;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Sand;
+						Main.tile[i, y].wall = WallID.None;
 					}
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y + 1].active(true);
-						Main.tile[i, y + 1].type = 397;
-						Main.tile[i, y + 1].wall = 0;
+						Main.tile[i, y + 1].type = TileID.HardenedSand;
+						Main.tile[i, y + 1].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
+					Main.tile[x, y - 1].wall = WallID.None;
 					WorldGen.GrowPalmTree(x, y);
 					name = "Desert Palm";
 					break;
@@ -6237,16 +6240,16 @@ namespace TShockAPI
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y].active(true);
-							Main.tile[i, y].type = 116;
-							Main.tile[i, y].wall = 0;
+							Main.tile[i, y].type = TileID.Pearlsand;
+							Main.tile[i, y].wall = WallID.None;
 						}
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y + 1].active(true);
-							Main.tile[i, y + 1].type = 402;
-							Main.tile[i, y + 1].wall = 0;
+							Main.tile[i, y + 1].type = TileID.HallowHardenedSand;
+							Main.tile[i, y + 1].wall = WallID.None;
 						}
-						Main.tile[x, y - 1].wall = 0;
+						Main.tile[x, y - 1].wall = WallID.None;
 						WorldGen.GrowPalmTree(x, y);
 						name = "Hallow Palm";
 					}
@@ -6259,16 +6262,16 @@ namespace TShockAPI
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y].active(true);
-							Main.tile[i, y].type = 234;
-							Main.tile[i, y].wall = 0;
+							Main.tile[i, y].type = TileID.Crimsand;
+							Main.tile[i, y].wall = WallID.None;
 						}
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y + 1].active(true);
-							Main.tile[i, y + 1].type = 399;
-							Main.tile[i, y + 1].wall = 0;
+							Main.tile[i, y + 1].type = TileID.CrimsonHardenedSand;
+							Main.tile[i, y + 1].wall = WallID.None;
 						}
-						Main.tile[x, y - 1].wall = 0;
+						Main.tile[x, y - 1].wall = WallID.None;
 						WorldGen.GrowPalmTree(x, y);
 						name = "Crimson Palm";
 					}
@@ -6281,16 +6284,16 @@ namespace TShockAPI
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y].active(true);
-							Main.tile[i, y].type = 112;
-							Main.tile[i, y].wall = 0;
+							Main.tile[i, y].type = TileID.Ebonsand;
+							Main.tile[i, y].wall = WallID.None;
 						}
 						for (int i = x - 2; i < x + 3; i++)
 						{
 							Main.tile[i, y + 1].active(true);
-							Main.tile[i, y + 1].type = 398;
-							Main.tile[i, y + 1].wall = 0;
+							Main.tile[i, y + 1].type = TileID.CorruptHardenedSand;
+							Main.tile[i, y + 1].wall = WallID.None;
 						}
-						Main.tile[x, y - 1].wall = 0;
+						Main.tile[x, y - 1].wall = WallID.None;
 						WorldGen.GrowPalmTree(x, y);
 						name = "Corruption Palm";
 					}
@@ -6301,11 +6304,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(583, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeTopaz, x, y);
 					name = "Topaz Gemtree";
 					break;
 
@@ -6313,11 +6316,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(584, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeAmethyst, x, y);
 					name = "Amethyst Gemtree";
 					break;
 
@@ -6325,11 +6328,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(585, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeSapphire, x, y);
 					name = "Sapphire Gemtree";
 					break;
 
@@ -6337,11 +6340,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(586, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeEmerald, x, y);
 					name = "Emerald Gemtree";
 					break;
 
@@ -6349,11 +6352,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(587, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeRuby, x, y);
 					name = "Ruby Gemtree";
 					break;
 
@@ -6361,11 +6364,11 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(588, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeDiamond, x, y);
 					name = "Diamond Gemtree";
 					break;
 
@@ -6373,36 +6376,39 @@ namespace TShockAPI
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 1;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.Stone;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
-					WorldGen.TryGrowingTreeByType(589, x, y);
+					Main.tile[x, y - 1].wall = WallID.None;
+					WorldGen.TryGrowingTreeByType(TileID.TreeAmber, x, y);
 					name = "Amber Gemtree";
 					break;
 
-				case "cactus":
-					Main.tile[x, y].type = 53;
-					WorldGen.GrowCactus(x, y);
-					name = "Cactus";
-					break;
+                // Commenting out these two cases until a fix has been found. 
 
-				case "herb":
-					Main.tile[x, y].active(true);
-					Main.tile[x, y].frameX = 36;
-					Main.tile[x, y].type = 83;
-					WorldGen.GrowAlch(x, y);
-					name = "Herb";
-					break;
+                //case "cactus":
+                //    Main.tile[x, y].active(true);
+                //    Main.tile[x, y].type = 53;
+                //    WorldGen.GrowCactus(x, y);
+                //    name = "Cactus";
+                //    break;
 
-				case "mushroom":
+                //case "herb":
+                //    Main.tile[x, y].active(true);
+                //    Main.tile[x, y].frameX = 36;
+                //    Main.tile[x, y].type = 83;
+                //    WorldGen.GrowAlch(x, y);
+                //    name = "Herb";
+                //    break;
+
+                case "mushroom":
 					for (int i = x - 2; i < x + 3; i++)
 					{
 						Main.tile[i, y].active(true);
-						Main.tile[i, y].type = 70;
-						Main.tile[i, y].wall = 0;
+						Main.tile[i, y].type = TileID.MushroomGrass;
+						Main.tile[i, y].wall = WallID.None;
 					}
-					Main.tile[x, y - 1].wall = 0;
+					Main.tile[x, y - 1].wall = WallID.None;
 					WorldGen.GrowShroom(x, y);
 					name = "Glowing Mushroom Tree";
 					break;
@@ -6474,4 +6480,5 @@ namespace TShockAPI
 
 		#endregion Cheat Comamnds
 	}
+	#pragma warning restore CS1591
 }

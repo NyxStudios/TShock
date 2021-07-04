@@ -13,6 +13,8 @@ This is the rolling changelog for TShock for Terraria. Use past tense when addin
   * If there is no section called "Upcoming changes" below this line, please add one with `## Upcoming changes` as the first line, and then a bulleted item directly after with the first change.
 
 ## Upcoming changes
+* Type naming for tile & wall ID's in `/grow`, Removing cases: 'cactus' & 'herb' until a fix is found. (@Rozen4334)
+* Added pragma notation to remove XML comment warnings in `Commands.cs`. (@Rozen4334)
 * Changed the world autosave message so that it no longer warns of a "potential lag spike." (@hakusaro)
 * Added `/slay` as an alias for `/kill` to be more consistent with other server mods. (@hakusaro)
 * Added `/god` as an alias for `/godmode` to be more consistent with other server mods. (@hakusaro)
