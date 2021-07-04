@@ -29,6 +29,7 @@ This is the rolling changelog for TShock for Terraria. Use past tense when addin
 * Correct rejection message in LandGolfBallInCupHandler to output the proper expected player id. (@drunderscore)
 * Clarified the error mesage that the console is presented if a rate-limit is reached over REST to indicate that "tokens" actually refers to rate-limit tokens, and not auth tokens, and added a hint as to what config setting determines this. (@hakusaro, @patsore)
 * Fixed an issue where, when the console was redirected, input was disabled and commands didn't work, in TSAPI. You can now pass `-disable-commands` to disable the input thread, but by default, it will be enabled. Fixes [#1450](https://github.com/Pryaxis/TShock/issues/1450). (@DeathCradle, @QuiCM)
+* Fixed SendTileRectHandler not sending tile rect updates like Pylons/Mannequins to other clients. (@Stealownz)
 
 ## TShock 4.5.4
 * Fixed ridiculous typo in `GetDataHandlers` which caused TShock to read the wrong field in the packet for `usingBiomeTorches`. (@hakusaro, @Arthri)

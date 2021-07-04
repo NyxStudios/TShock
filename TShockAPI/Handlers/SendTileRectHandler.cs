@@ -85,7 +85,7 @@ namespace TShockAPI.Handlers
 			// At this point we should send our state back to the client so they remain in sync with the server
 			if (args.Handled == true)
 			{
-				args.Player.SendTileRect(args.TileX, args.TileY, args.Width, args.Length);
+				TSPlayer.All.SendTileRect(args.TileX, args.TileY, args.Width, args.Length);
 				TShock.Log.ConsoleDebug("Bouncer / SendTileRect reimplemented from carbonara from {0}", args.Player.Name);
 			}
 		}
