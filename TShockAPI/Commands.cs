@@ -2401,12 +2401,26 @@ namespace TShockAPI
 			{
 				Main.hardMode = false;
 				TSPlayer.All.SendData(PacketTypes.WorldInfo);
-				args.Player.SendSuccessMessage("Hardmode is now off.");
+				if (args.Silent)
+				{
+					args.Player.SendSuccessMessage("You turned off Hardmode.");
+				}
+				else
+				{
+					TSPlayer.All.SendInfoMessage("{0} turned off Hardmode.", args.Player.Name);
+				}
 			}
 			else if (!TShock.Config.Settings.DisableHardmode)
 			{
 				WorldGen.StartHardmode();
-				args.Player.SendSuccessMessage("Hardmode is now on.");
+				if (args.Silent)
+				{
+					args.Player.SendSuccessMessage("You turned on Hardmode.");
+				}
+				else
+				{
+					TSPlayer.All.SendInfoMessage("{0} turned on Hardmode.", args.Player.Name);
+				}
 			}
 			else
 			{
@@ -4429,8 +4443,32 @@ namespace TShockAPI
 					damage = TShock.Utils.Clamp(damage, 15, 0);
 				}
 				plr.DamagePlayer(damage);
-				TSPlayer.All.SendInfoMessage("{0} slapped {1} for {2} damage.", args.Player.Name, plr.Name, damage);
-				TShock.Log.Info("{0} slapped {1} for {2} damage.", args.Player.Name, plr.Name, damage);
+				
+				var gender = args.Player.TPlayer.Male ? "himself" : "herself";
+				if (plr == args.Player)
+				{
+					if (!args.Silent)
+					{
+						TSPlayer.All.SendInfoMessage("{0} slapped {1} for {2} damage.", args.Player.Name, gender, damage);
+						TShock.Log.Info("{0} slapped {1} for {2} damage.", args.Player.Name, gender, damage);
+					}
+					else
+						args.Player.SendSuccessMessage("You slapped yourself for {0} damage.", damage);
+						TShock.Log.Info("{0} slapped {1} for {2} damage.", args.Player.Name, gender, damage);
+				}
+				else
+				{
+					if (args.Silent)
+					{
+						args.Player.SendSuccessMessage("You slapped {0} for {1} damage.", plr.Name, damage);
+						TShock.Log.Info("{0} slapped {1} for {2} damage.", args.Player.Name, plr.Name, damage);
+					}
+					else
+					{
+						TSPlayer.All.SendInfoMessage("{0} slapped {1} for {2} damage.", args.Player.Name, plr.Name, damage);
+						TShock.Log.Info("{0} slapped {1} for {2} damage.", args.Player.Name, plr.Name, damage);
+					}
+				}
 			}
 		}
 
@@ -4452,7 +4490,14 @@ namespace TShockAPI
 			Main.windSpeedCurrent = speed;
 			Main.windSpeedTarget = speed;
 			TSPlayer.All.SendData(PacketTypes.WorldInfo);
-			TSPlayer.All.SendInfoMessage("{0} changed the wind speed to {1}.", args.Player.Name, speed);
+			if (args.Silent)
+			{
+				args.Player.SendSuccessMessage("You changed the wind speed to {0}.", speed);
+			}
+			else
+			{
+				TSPlayer.All.SendInfoMessage("{0} changed the wind speed to {1}.", args.Player.Name, speed);
+			}
 		}
 
 		#endregion Time/PvpFun Commands
@@ -5037,13 +5082,27 @@ namespace TShockAPI
 		private static void ToggleAntiBuild(CommandArgs args)
 		{
 			TShock.Config.Settings.DisableBuild = !TShock.Config.Settings.DisableBuild;
-			TSPlayer.All.SendSuccessMessage(string.Format("Anti-build is now {0}.", (TShock.Config.Settings.DisableBuild ? "on" : "off")));
+			if (args.Silent)
+			{
+				args.Player.SendSuccessMessage(string.Format("You turned {0} anti-build.", (TShock.Config.Settings.DisableBuild ? "on" : "off")));
+			}
+			else
+			{
+				TSPlayer.All.SendInfoMessage(string.Format("{0} turned {1} anti-build.", args.Player.Name, (TShock.Config.Settings.DisableBuild ? "on" : "off")));
+			}
 		}
 
 		private static void ProtectSpawn(CommandArgs args)
 		{
 			TShock.Config.Settings.SpawnProtection = !TShock.Config.Settings.SpawnProtection;
-			TSPlayer.All.SendSuccessMessage(string.Format("Spawn is now {0}.", (TShock.Config.Settings.SpawnProtection ? "protected" : "open")));
+			if (args.Silent)
+			{
+				args.Player.SendSuccessMessage(string.Format("You turned {0} spawn protection.", (TShock.Config.Settings.SpawnProtection ? "on" : "off")));
+			}
+			else
+			{
+				TSPlayer.All.SendInfoMessage(string.Format("{0} turned {1} spawn protection.", args.Player.Name, (TShock.Config.Settings.SpawnProtection ? "on" : "off")));
+			}
 		}
 
 		#endregion World Protection Commands
