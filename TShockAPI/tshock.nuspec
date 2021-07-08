@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>TShock</id>
+    <title>TShock for Terraria</title>
+    <version>4.5.3-experimental</version>
+    <authors>The TShock Team</authors>
+    <owners>Pryaxis</owners>
+    <license type="expression">GPL-3.0-or-later</license>
+    <projectUrl>https://github.com/Pryaxis/TShock</projectUrl>
+    <repository type="git" url="https://github.com/Pryaxis/TShock.git" branch="general-devel" commit="89555beb7360f9f8b24704c3e52238042db8027c" />
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>TShock is a modest, conservative toolbox for Terraria serverside community management.</description>
+    <summary>TShock 4.5.3-experimental for Terraria 1.4.2.3</summary>
+    <releaseNotes>
+      Initial nuget test release ***experimental***
+    </releaseNotes>
+    <copyright>Copyright 2011-2021</copyright>
+    <tags>Terraria,OTAPI,TShock</tags>
+    <dependencies>
+    <group targetFramework=".NETFramework4.5.1">
+      <dependency id="Newtonsoft.Json" version="10.0.3" />
+      <dependency id="BCrypt.Net" version="0.1.0" />
+      <dependency id="MySql.Data" version="6.9.8" />
+      <dependency id="OTAPI" version="2.0.0.43" />
+    </group>
+    </dependencies>
+  </metadata>
+</package>
