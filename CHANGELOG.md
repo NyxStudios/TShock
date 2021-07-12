@@ -29,6 +29,8 @@ This is the rolling changelog for TShock for Terraria. Use past tense when addin
 * Correct rejection message in LandGolfBallInCupHandler to output the proper expected player id. (@drunderscore)
 * Clarified the error mesage that the console is presented if a rate-limit is reached over REST to indicate that "tokens" actually refers to rate-limit tokens, and not auth tokens, and added a hint as to what config setting determines this. (@hakusaro, @patsore)
 * Fixed an issue where, when the console was redirected, input was disabled and commands didn't work, in TSAPI. You can now pass `-disable-commands` to disable the input thread, but by default, it will be enabled. Fixes [#1450](https://github.com/Pryaxis/TShock/issues/1450). (@DeathCradle, @QuiCM)
+* Added `summonboss` permission check for Prismatic Lacewing. Players who do not have said permission will be unable to kill this critter, as it will summon the Empress of Light. Also added support for the `AnonymousBossInvasions` config option, if this is set to `false` it will now broadcast the name of the player who summoned her. (@moisterrific)
+* Added `ForceTime` config setting check for Enchanted Sundial usage. If `ForceTime` is set to anything other than `normal`, Sundial use will be rejected as this would lead to very janky game behavior. Additionally, players with `cfgreload` permission will be advised  to change it back to `normal` in order to use sundial. (@moisterrific, @bartico6)
 
 ## TShock 4.5.4
 * Fixed ridiculous typo in `GetDataHandlers` which caused TShock to read the wrong field in the packet for `usingBiomeTorches`. (@hakusaro, @Arthri)
