@@ -322,6 +322,7 @@ namespace TShockAPI
 				Regions = new RegionManager(DB);
 				UserAccounts = new UserAccountManager(DB);
 				Groups = new GroupManager(DB);
+				Groups.EnsureCoreGroupsPresent();
 				ProjectileBans = new ProjectileManagager(DB);
 				TileBans = new TileManager(DB);
 				RememberedPos = new RememberedPosManager(DB);
@@ -386,8 +387,8 @@ namespace TShockAPI
 			}
 			catch (Exception ex)
 			{
-				Log.Error("Fatal Startup Exception");
-				Log.Error(ex.ToString());
+				Log.ConsoleError("Fatal Startup Exception");
+				Log.ConsoleError(ex.ToString());
 				Environment.Exit(1);
 			}
 		}

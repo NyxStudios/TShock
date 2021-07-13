@@ -2450,9 +2450,12 @@ namespace TShockAPI
 						args.Player.State = 2;
 					NetMessage.SendData((int)PacketTypes.WorldInfo, args.Player.Index);
 
-					args.Player.PlayerData = TShock.CharacterDB.GetPlayerData(args.Player, account.ID);
-
 					var group = TShock.Groups.GetGroupByName(account.Group);
+
+					if (!TShock.Utils.AssertGroupValid(args.Player, group, true))
+						return true;
+
+					args.Player.PlayerData = TShock.CharacterDB.GetPlayerData(args.Player, account.ID);
 
 					args.Player.Group = group;
 					args.Player.tempGroup = null;
@@ -3003,6 +3006,9 @@ namespace TShockAPI
 					NetMessage.SendData((int)PacketTypes.WorldInfo, args.Player.Index);
 
 					var group = TShock.Groups.GetGroupByName(account.Group);
+
+					if (!TShock.Utils.AssertGroupValid(args.Player, group, true))
+						return true;
 
 					args.Player.Group = group;
 					args.Player.tempGroup = null;

@@ -213,6 +213,27 @@ namespace TShockAPI
 		}
 
 		/// <summary>
+		/// Asserts that the group reference can be safely assigned to the player object.
+		/// <para>If this assertion fails, and <paramref name="kick"/> is true, the player is disconnected. If <paramref name="kick"/> is false, the player will receive an error message.</para>
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="group"></param>
+		/// <returns></returns>
+		public bool AssertGroupValid(TSPlayer player, Group group, bool kick)
+        {
+			if (group == null)
+			{
+				if (kick)
+					player.Disconnect("Your account's group could not be loaded. Please contact server administrators about this.");
+				else
+					player.SendErrorMessage("Your account's group could not be loaded. Please contact server administrators about this.");
+				return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		/// Determines if a tile is valid.
 		/// </summary>
 		/// <param name="tileX">Location X</param>

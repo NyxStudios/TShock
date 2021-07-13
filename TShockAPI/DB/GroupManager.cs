@@ -202,6 +202,21 @@ namespace TShockAPI.DB
 			Group.DefaultGroup = GetGroupByName(TShock.Config.Settings.DefaultGuestGroupName);
 		}
 
+		internal void EnsureCoreGroupsPresent()
+		{
+			if (!GroupExists(TShock.Config.Settings.DefaultGuestGroupName))
+			{
+				TShock.Log.ConsoleError("The guest group could not be found. This may indicate a typo in the configuration file, or that the group was renamed or deleted.");
+				throw new Exception("The guest group could not be found.");
+			}
+
+			if(!GroupExists(TShock.Config.Settings.DefaultRegistrationGroupName))
+            {
+				TShock.Log.ConsoleError("The default usergroup could not be found. This may indicate a typo in the configuration file, or that the group was renamed or deleted.");
+				throw new Exception("The default usergroup could not be found.");
+            }
+		}
+
 		private void AddDefaultGroup(string name, string parent, string permissions)
 		{
 			if (!GroupExists(name))
