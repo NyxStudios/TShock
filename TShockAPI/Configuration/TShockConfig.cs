@@ -133,6 +133,10 @@ namespace TShockAPI.Configuration
 		[Description("Prevents softcore players from connecting.")]
 		public bool MediumcoreOnly;
 
+		/// <summary>Prevents non-softcore players from connecting.</summary>
+		[Description("Prevents non-softcore players from connecting.")]
+		public bool SoftcoreOnly;
+
 		/// <summary>Disables any placing, or removal of blocks.</summary>
 		[Description("Disables any placing, or removal of blocks.")]
 		public bool DisableBuild;
