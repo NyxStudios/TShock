@@ -2364,6 +2364,12 @@ namespace TShockAPI
 				NetMessage.SendData((int)PacketTypes.PlayerInfo, -1, args.Player.Index, NetworkText.FromLiteral(args.Player.Name), args.Player.Index);
 				return true;
 			}
+			if (TShock.Config.Settings.SoftcoreOnly && difficulty != 0)
+			{
+				TShock.Log.ConsoleDebug("GetDataHandlers / HandlePlayerInfo rejected softcore required");
+				args.Player.Kick("You need to join with a softcore player.", true, true);
+				return true;
+			}
 			if (TShock.Config.Settings.MediumcoreOnly && difficulty < 1)
 			{
 				TShock.Log.ConsoleDebug("GetDataHandlers / HandlePlayerInfo rejected mediumcore required");
